@@ -2,7 +2,6 @@
 To enable this backend, configure your LMS and CMS settings like this:
 PROCTORING_BACKENDS = {
     'DEFAULT': 'mockprock',
-    'mock': {},
     'mockprock': {
         'client_id': 'abcd',
         'client_secret': 'secret'
