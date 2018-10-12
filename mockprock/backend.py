@@ -1,3 +1,15 @@
+"""
+To enable this backend, configure your LMS and CMS settings like this:
+PROCTORING_BACKENDS = {
+    'DEFAULT': 'mockprock',
+    'mock': {},
+    'mockprock': {
+        'client_id': 'abcd',
+        'client_secret': 'secret'
+    }
+}
+"""
+
 from edx_proctoring.backends.rest import BaseRestProctoringProvider
 
 class MockProckBackend(BaseRestProctoringProvider):

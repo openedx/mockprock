@@ -1,3 +1,6 @@
+"""
+Run this server with python -m mockprock.server
+"""
 import atexit
 import shelve
 import threading
@@ -30,16 +33,25 @@ proctoring_config = {
 
 @app.route('/v1/config/')
 def get_config():
+    """
+    Returns the global configuration options
+    """
     return jsonify(proctoring_config)
 
 
 @app.route('/v1/exam/<exam_id>/', methods=['GET'])
 def get_exam(exam_id):
+    """
+    Returns the exam
+    """
     exam = app.shelf.get(exam_id, {})
     return jsonify(exam)
 
 @app.route('/v1/exam/', methods=['POST'])
 def create_exam():
+    """
+    Creates an exam, returning an external id
+    """
     exam = request.json
     exam_id = uuid.uuid4().hex
     app.shelf[exam_id] = exam
@@ -48,6 +60,11 @@ def create_exam():
 
 @app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'POST', 'PATCH'])
 def exam_attempt_endpoint(exam_id, attempt_id):
+    """
+    Creates/retrieves/updates the exam attempt
+    For convenience, the GET request also returns instructions and software download link
+    for the exam
+    """
     attempt = request.json
     if request.authorization:
         username = request.authorization.username
@@ -75,6 +92,10 @@ def exam_attempt_endpoint(exam_id, attempt_id):
 
 @app.route('/download')
 def software_download():
+    """
+    Page that pretends to download software, and then calls back to edx
+    to signal that the exam is ready
+    """
     attempt_id = request.args.get('attempt')
     attempt = app.shelf.get(attempt_id, {})
     app.logger.info('Requesting download for attempt %s', attempt_id)
