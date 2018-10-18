@@ -2,18 +2,21 @@
 Run this server with python -m mockprock.server
 """
 import atexit
-import shelve
+import sys
 import threading
+import time
 import uuid
-from flask import Flask, request, jsonify
-import requests
+from functools import wraps
 
+import jwt
+from edx_rest_api_client.client import EdxSession
+from flask import Flask, abort, jsonify, request
+from pickleshare import PickleShareDB
 
 app = Flask(__name__)
-app.shelf = shelve.open('/tmp/mockprock')
+app.shelf = PickleShareDB('/tmp/mockprock')
 app.debug = True
-
-atexit.register(app.shelf.close)
+app.secret_key = 'super secret'
 
 proctoring_config = {
     'download_url': 'http://host.docker.internal:11136/download',
@@ -31,7 +34,41 @@ proctoring_config = {
     ]
 }
 
+
+def requires_token(f):
+    @wraps(f)
+    def _func(*args, **kwargs):
+        token = request.headers.get('Authorization', ' ').split(' ')[1]
+        try:
+            jwt.decode(token, app.secret_key, verify=False)
+        except jwt.DecodeError:
+            abort(403)
+        else:
+            return f(*args, **kwargs)
+    return _func
+
+
+@app.route('/oauth2/access_token', methods=['POST'])
+def access_token():
+    """
+    Returns a mock JWT token
+    """
+    grant_type = request.form['grant_type']
+    client_id = request.form['client_id']
+    client_secret = request.form['client_secret']
+    token_type = request.form['token_type']
+    assert token_type == 'jwt', 'Only JWT is supported'
+    resp = {}
+    if client_secret == client_id + 'secret':
+        exp = 3600
+        payload = {'aud': client_id, 'exp': time.time() + exp}
+        token = jwt.encode(payload, app.secret_key)
+        resp['access_token'] = token
+        resp['expires_in'] = exp
+    return jsonify(resp)
+
 @app.route('/v1/config/')
+@requires_token
 def get_config():
     """
     Returns the global configuration options
@@ -40,6 +77,7 @@ def get_config():
 
 
 @app.route('/v1/exam/<exam_id>/', methods=['GET'])
+@requires_token
 def get_exam(exam_id):
     """
     Returns the exam
@@ -48,6 +86,7 @@ def get_exam(exam_id):
     return jsonify(exam)
 
 @app.route('/v1/exam/', methods=['POST'])
+@requires_token
 def create_exam():
     """
     Creates an exam, returning an external id
@@ -58,7 +97,17 @@ def create_exam():
     app.logger.info('Saved exam %s from %s', exam_id, request.authorization.username)
     return jsonify({'id': exam_id})
 
-@app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'POST', 'PATCH'])
+@app.route('/v1/exam/<exam_id>/attempt/', methods=['POST'])
+@requires_token
+def create_attempt(exam_id):
+    attempt = request.json
+    attempt_id = uuid.uuid4().hex
+    app.shelf['%s/%s' % (exam_id, attempt_id)] = attempt
+    app.logger.info('Created attempt %s from %r', attempt_id, attempt)
+    return jsonify({'id': attempt_id})
+
+@app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'PATCH'])
+@requires_token
 def exam_attempt_endpoint(exam_id, attempt_id):
     """
     Creates/retrieves/updates the exam attempt
@@ -66,26 +115,20 @@ def exam_attempt_endpoint(exam_id, attempt_id):
     for the exam
     """
     attempt = request.json
-    if request.authorization:
-        username = request.authorization.username
-    else:
-        username = None
     response = {'id': attempt_id}
-    if request.method == 'POST':
-        app.shelf[attempt_id] = attempt
-        app.logger.info('Created attempt %s from %s %r', attempt_id, username, attempt)
-    elif request.method == 'PATCH':
-        app.shelf[attempt_id].update(attempt)
+    key = '%s/%s' % (exam_id, attempt_id)
+    if request.method == 'PATCH':
+        app.shelf[key].update(attempt)
         status = attempt.get('status')
         if status == 'stop':
             app.logger.info('Finished attempt %s. Sending a fake review in 10 seconds...', attempt_id)
-            threading.Timer(10, make_review_callback, args=[attempt_id]).start()
+            threading.Timer(10, make_review_callback, args=[key]).start()
         else:
             app.logger.info('Changed attempt %s status to %s', attempt_id, status)
         response['status'] = status
     elif request.method == 'GET':
         download_url = '{}?attempt={}'.format(proctoring_config['download_url'], attempt_id)
-        response = app.shelf.get(attempt_id, {})
+        response = app.shelf.get(key, {})
         response['download_url'] = download_url
         response['instructions'] = proctoring_config['instructions']
     return jsonify(response)
@@ -118,32 +161,29 @@ setTimeout(window.close, 10000);
 def make_ready_callback(attempt):
     try:
         callback_url = attempt['callback_url']
-        token = attempt['callback_token']
         payload = {
-            'token': token,
             'status': 'ready'
         }
-        response = requests.post(callback_url, json=payload).json()
+        response = app.client.post(callback_url, json=payload).json()
         app.logger.info('Got ready response from LMS: %s', response)
     except Exception:
         app.logger.exception('in ready callback')
 
-def make_review_callback(attempt_id):
-    attempt = app.shelf[attempt_id]
+def make_review_callback(key):
+    attempt = app.shelf[key]
     callback_url = attempt['review_callback_url']
-    token = attempt['callback_token']
     status = 'verified'
     comments = [
         {'comment': 'Looks suspicious', 'status': 'ok'}
     ]
     payload = {
-        'token': token,
         'status': status,
         'comments': comments
     }
-    response = requests.post(callback_url, json=payload).json()
+    response = app.client.post(callback_url, json=payload).json()
     app.logger.info('Got review response from LMS: %s', response)
 
 
 if __name__ == '__main__':
+    app.client = EdxSession('http://localhost:18000', sys.argv[1], sys.argv[2])
     app.run(host='0.0.0.0', port=11136)
