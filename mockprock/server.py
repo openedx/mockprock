@@ -122,12 +122,12 @@ def exam_attempt_endpoint(exam_id, attempt_id):
         status = attempt.get('status')
         if status == 'stop':
             app.logger.info('Finished attempt %s. Sending a fake review in 10 seconds...', attempt_id)
-            threading.Timer(10, make_review_callback, args=[key]).start()
+            threading.Timer(10, make_review_callback, args=[exam_id, attempt_id]).start()
         else:
             app.logger.info('Changed attempt %s status to %s', attempt_id, status)
         response['status'] = status
     elif request.method == 'GET':
-        download_url = '{}?attempt={}'.format(proctoring_config['download_url'], attempt_id)
+        download_url = '{}?attempt={}&exam={}'.format(proctoring_config['download_url'], attempt_id, exam_id)
         response = app.shelf.get(key, {})
         response['download_url'] = download_url
         response['instructions'] = proctoring_config['instructions']
@@ -140,7 +140,8 @@ def software_download():
     to signal that the exam is ready
     """
     attempt_id = request.args.get('attempt')
-    attempt = app.shelf.get(attempt_id, {})
+    exam_id = request.args.get('exam')
+    attempt = app.shelf.get('%s/%s' % (exam_id,attempt_id), {})
     app.logger.info('Requesting download for attempt %s', attempt_id)
     dl = '''
 <html>
@@ -155,12 +156,12 @@ setTimeout(window.close, 10000);
     </body>
 </html>
     '''
-    threading.Timer(2, make_ready_callback, args=[attempt]).start()
+    threading.Timer(2, make_ready_callback, args=[attempt_id, attempt]).start()
     return dl
 
-def make_ready_callback(attempt):
+def make_ready_callback(attempt_id, attempt):
     try:
-        callback_url = attempt['callback_url']
+        callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/ready' % (attempt['lms_host'], attempt_id)
         payload = {
             'status': 'ready'
         }
@@ -169,9 +170,9 @@ def make_ready_callback(attempt):
     except Exception:
         app.logger.exception('in ready callback')
 
-def make_review_callback(key):
-    attempt = app.shelf[key]
-    callback_url = attempt['review_callback_url']
+def make_review_callback(exam_id, attempt_id):
+    attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
+    callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/review' % (attempt['lms_host'], attempt_id)
     status = 'verified'
     comments = [
         {'comment': 'Looks suspicious', 'status': 'ok'}

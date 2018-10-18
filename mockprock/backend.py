@@ -13,6 +13,6 @@ from edx_proctoring.backends.rest import BaseRestProctoringProvider
 
 
 class MockProckBackend(BaseRestProctoringProvider):
-    base_url = 'http://host.docker.internal:11136'
+    base_url = u'http://host.docker.internal:11136'
     verbose_name = u'Mock Proctoring Service'
     needs_oauth = True
