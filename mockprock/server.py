@@ -1,5 +1,5 @@
 """
-Run this server with python -m mockprock.server
+Run this server with python -m mockprock.server {client_id} {client_secret}
 """
 import atexit
 import sys
@@ -185,5 +185,19 @@ def make_review_callback(key):
 
 
 if __name__ == '__main__':
-    app.client = EdxSession('http://localhost:18000', sys.argv[1], sys.argv[2])
+    import argparse
+    parser = argparse.ArgumentParser(
+        description='run the mockprock server',
+        epilog='Retrieve the mockprock client id and secret from the LMS Django admin, and start the server with those arguments')
+    parser.add_argument("client_id", type=str, help="oauth client id", nargs="?")
+    parser.add_argument("client_secret", type=str, help="oauth client secret", nargs="?")
+    args = parser.parse_args()
+
+    if not (args.client_id and args.client_secret):
+        parser.print_help()
+        time.sleep(2)
+        import webbrowser
+        webbrowser.open('http://localhost:18000/admin/oauth2_provider/application/')
+        sys.exit(1)
+    app.client = EdxSession('http://localhost:18000', args.client_id, args.client_secret)
     app.run(host='0.0.0.0', port=11136)
