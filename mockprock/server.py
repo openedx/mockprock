@@ -9,7 +9,7 @@ import uuid
 from functools import wraps
 
 import jwt
-from edx_rest_api_client.client import EdxSession
+from edx_rest_api_client.client import OAuthAPIClient
 from flask import Flask, abort, jsonify, request
 from pickleshare import PickleShareDB
 
@@ -200,5 +200,5 @@ if __name__ == '__main__':
         import webbrowser
         webbrowser.open('http://localhost:18000/admin/oauth2_provider/application/')
         sys.exit(1)
-    app.client = EdxSession('http://localhost:18000', args.client_id, args.client_secret)
+    app.client = OAuthAPIClient('http://localhost:18000', args.client_id, args.client_secret)
     app.run(host='0.0.0.0', port=11136)

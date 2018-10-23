@@ -34,7 +34,7 @@ setup(
         "flask",
         "pickleshare",
         "pyjwt",
-        'edx_rest_api_client @ git+https://github.com/edx/edx-rest-api-client/@b7e8ee6bff7d4c211ba0b4668649b20c3e9ccbc8#egg=edx_rest_api_client-000'
+        'edx_rest_api_client>=1.9',
     ],
     entry_points={
         'openedx.proctoring': [
