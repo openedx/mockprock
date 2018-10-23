@@ -172,7 +172,7 @@ def make_ready_callback(attempt_id, attempt):
 
 def make_review_callback(exam_id, attempt_id):
     attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
-    callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/review' % (attempt['lms_host'], attempt_id)
+    callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/reviewed' % (attempt['lms_host'], attempt_id)
     status = 'verified'
     comments = [
         {'comment': 'Looks suspicious', 'status': 'ok'}
