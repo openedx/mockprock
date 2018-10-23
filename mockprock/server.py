@@ -2,6 +2,7 @@
 Run this server with python -m mockprock.server {client_id} {client_secret}
 """
 import atexit
+from pprint import pprint
 import sys
 import threading
 import time
@@ -93,8 +94,27 @@ def create_exam():
     """
     exam = request.json
     exam_id = uuid.uuid4().hex
-    app.shelf[exam_id] = exam
-    app.logger.info('Saved exam %s from %s', exam_id, request.authorization.username)
+    key = '%s/exam' % exam_id
+    app.shelf[key] = exam
+    app.logger.info('Saved exam %s from %s', exam_id, request.headers.get('Authorization'))
+    pprint(exam)
+    return jsonify({'id': exam_id})
+
+@app.route('/v1/exam/<exam_id>/', methods=['POST'])
+@requires_token
+def update_exam(exam_id):
+    """
+    Updates an exam, returning the exam
+    """
+    exam = request.json
+    key = '%s/exam' % exam_id
+    if not app.shelf.get(key, None):
+        app.shelf[key] = exam
+        app.logger.info('Updated exam %s from %s', exam_id, request.headers.get('Authorization'))
+    else:
+        app.shelf[key] = exam
+        app.logger.info('Got confused update request for exam %s from %s', exam_id, request.headers.get('Authorization'))
+    pprint(exam)
     return jsonify({'id': exam_id})
 
 @app.route('/v1/exam/<exam_id>/attempt/', methods=['POST'])
@@ -131,6 +151,7 @@ def exam_attempt_endpoint(exam_id, attempt_id):
         response = app.shelf.get(key, {})
         response['download_url'] = download_url
         response['instructions'] = proctoring_config['instructions']
+        response['config'] = app.shelf.get('%s/exam' % exam_id, {}).get('config', {})
     return jsonify(response)
 
 @app.route('/download')
