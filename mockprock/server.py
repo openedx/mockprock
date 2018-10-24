@@ -36,6 +36,9 @@ proctoring_config = {
 }
 
 
+def get_download_url():
+    return 'http://%s/download' % request.host
+
 def requires_token(f):
     @wraps(f)
     def _func(*args, **kwargs):
@@ -74,6 +77,7 @@ def get_config():
     """
     Returns the global configuration options
     """
+    proctoring_config['download_url'] = get_download_url()
     return jsonify(proctoring_config)
 
 
@@ -147,7 +151,7 @@ def exam_attempt_endpoint(exam_id, attempt_id):
             app.logger.info('Changed attempt %s status to %s', attempt_id, status)
         response['status'] = status
     elif request.method == 'GET':
-        download_url = '{}?attempt={}&exam={}'.format(proctoring_config['download_url'], attempt_id, exam_id)
+        download_url = '{}?attempt={}&exam={}'.format(get_download_url(), attempt_id, exam_id)
         response = app.shelf.get(key, {})
         response['download_url'] = download_url
         response['instructions'] = proctoring_config['instructions']
