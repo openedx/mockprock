@@ -112,12 +112,11 @@ def update_exam(exam_id):
     """
     exam = request.json
     key = '%s/exam' % exam_id
-    if not app.shelf.get(key, None):
-        app.shelf[key] = exam
+    if app.shelf.get(key, None):
         app.logger.info('Updated exam %s from %s', exam_id, request.headers.get('Authorization'))
     else:
-        app.shelf[key] = exam
         app.logger.info('Got confused update request for exam %s from %s', exam_id, request.headers.get('Authorization'))
+    app.shelf[key] = exam
     pprint(exam)
     return jsonify({'id': exam_id})
 
