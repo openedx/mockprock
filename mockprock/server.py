@@ -67,7 +67,7 @@ def access_token():
         exp = 3600
         payload = {'aud': client_id, 'exp': time.time() + exp}
         token = jwt.encode(payload, app.secret_key)
-        resp[u'access_token'] = token
+        resp[u'access_token'] = token.decode('utf8')
         resp[u'expires_in'] = exp
     return jsonify(resp)
 
