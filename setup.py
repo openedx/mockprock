@@ -33,7 +33,7 @@ setup(
         "requests",
         "flask",
         "pickleshare",
-        "pyjwt",
+        "PyJWT",
         'edx_rest_api_client>=1.9',
     ],
     entry_points={

@@ -37,7 +37,7 @@ proctoring_config = {
 
 
 def get_download_url():
-    return 'http://%s/download' % request.host
+    return u'http://%s/download' % request.host
 
 def requires_token(f):
     @wraps(f)
@@ -67,8 +67,8 @@ def access_token():
         exp = 3600
         payload = {'aud': client_id, 'exp': time.time() + exp}
         token = jwt.encode(payload, app.secret_key)
-        resp['access_token'] = token
-        resp['expires_in'] = exp
+        resp[u'access_token'] = token
+        resp[u'expires_in'] = exp
     return jsonify(resp)
 
 @app.route('/v1/config/')
@@ -77,7 +77,7 @@ def get_config():
     """
     Returns the global configuration options
     """
-    proctoring_config['download_url'] = get_download_url()
+    proctoring_config[u'download_url'] = get_download_url()
     return jsonify(proctoring_config)
 
 
@@ -102,7 +102,7 @@ def create_exam():
     app.shelf[key] = exam
     app.logger.info('Saved exam %s from %s', exam_id, request.headers.get('Authorization'))
     pprint(exam)
-    return jsonify({'id': exam_id})
+    return jsonify({u'id': exam_id})
 
 @app.route('/v1/exam/<exam_id>/', methods=['POST'])
 @requires_token
@@ -118,7 +118,7 @@ def update_exam(exam_id):
         app.logger.info('Got confused update request for exam %s from %s', exam_id, request.headers.get('Authorization'))
     app.shelf[key] = exam
     pprint(exam)
-    return jsonify({'id': exam_id})
+    return jsonify({u'id': exam_id})
 
 @app.route('/v1/exam/<exam_id>/attempt/', methods=['POST'])
 @requires_token
@@ -127,7 +127,7 @@ def create_attempt(exam_id):
     attempt_id = uuid.uuid4().hex
     app.shelf['%s/%s' % (exam_id, attempt_id)] = attempt
     app.logger.info('Created attempt %s from %r', attempt_id, attempt)
-    return jsonify({'id': attempt_id})
+    return jsonify({u'id': attempt_id})
 
 @app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'PATCH'])
 @requires_token
@@ -150,11 +150,11 @@ def exam_attempt_endpoint(exam_id, attempt_id):
             app.logger.info('Changed attempt %s status to %s', attempt_id, status)
         response['status'] = status
     elif request.method == 'GET':
-        download_url = '{}?attempt={}&exam={}'.format(get_download_url(), attempt_id, exam_id)
+        download_url = u'{}?attempt={}&exam={}'.format(get_download_url(), attempt_id, exam_id)
         response = app.shelf.get(key, {})
-        response['download_url'] = download_url
-        response['instructions'] = proctoring_config['instructions']
-        response['config'] = app.shelf.get('%s/exam' % exam_id, {}).get('config', {})
+        response[u'download_url'] = download_url
+        response[u'instructions'] = proctoring_config['instructions']
+        response[u'config'] = app.shelf.get('%s/exam' % exam_id, {}).get('config', {})
     return jsonify(response)
 
 @app.route('/download')
@@ -187,7 +187,7 @@ def make_ready_callback(attempt_id, attempt):
     try:
         callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/ready' % (attempt['lms_host'], attempt_id)
         payload = {
-            'status': 'ready'
+            u'status': u'ready'
         }
         response = app.client.post(callback_url, json=payload).json()
         app.logger.info('Got ready response from LMS: %s', response)
@@ -197,13 +197,13 @@ def make_ready_callback(attempt_id, attempt):
 def make_review_callback(exam_id, attempt_id):
     attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
     callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/reviewed' % (attempt['lms_host'], attempt_id)
-    status = 'verified'
+    status = u'verified'
     comments = [
-        {'comment': 'Looks suspicious', 'status': 'ok'}
+        {u'comment': u'Looks suspicious', u'status': u'ok'}
     ]
     payload = {
-        'status': status,
-        'comments': comments
+        u'status': status,
+        u'comments': comments
     }
     response = app.client.post(callback_url, json=payload).json()
     app.logger.info('Got review response from LMS: %s', response)
