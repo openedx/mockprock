@@ -216,13 +216,14 @@ if __name__ == '__main__':
         epilog='Retrieve the mockprock client id and secret from the LMS Django admin, and start the server with those arguments')
     parser.add_argument("client_id", type=str, help="oauth client id", nargs="?")
     parser.add_argument("client_secret", type=str, help="oauth client secret", nargs="?")
+    parser.add_argument('-l', dest='lms_host', type=str, help='LMS host', default='http://host.docker.internal:18000')
     args = parser.parse_args()
 
     if not (args.client_id and args.client_secret):
         parser.print_help()
         time.sleep(2)
         import webbrowser
-        webbrowser.open('http://localhost:18000/admin/oauth2_provider/application/')
+        webbrowser.open('%s/admin/oauth2_provider/application/' % args.lms_host)
         sys.exit(1)
-    app.client = OAuthAPIClient('http://localhost:18000', args.client_id, args.client_secret)
+    app.client = OAuthAPIClient(args.lms_host, args.client_id, args.client_secret)
     app.run(host='0.0.0.0', port=11136)
