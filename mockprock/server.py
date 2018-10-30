@@ -189,24 +189,34 @@ def make_ready_callback(attempt_id, attempt):
         payload = {
             u'status': u'ready'
         }
+        app.logger.info('Calling back to %s', callback_url)
         response = app.client.post(callback_url, json=payload).json()
         app.logger.info('Got ready response from LMS: %s', response)
-    except Exception:
+    except Exception as ex:
         app.logger.exception('in ready callback')
+        if hasattr(ex, 'response'):
+            app.logger.info('LMS error response: %r', ex.response.content)
 
 def make_review_callback(exam_id, attempt_id):
-    attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
-    callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/reviewed' % (attempt['lms_host'], attempt_id)
-    status = u'verified'
-    comments = [
-        {u'comment': u'Looks suspicious', u'status': u'ok'}
-    ]
-    payload = {
-        u'status': status,
-        u'comments': comments
-    }
-    response = app.client.post(callback_url, json=payload).json()
-    app.logger.info('Got review response from LMS: %s', response)
+    try:
+        attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
+        callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/reviewed' % (attempt['lms_host'], attempt_id)
+        status = u'verified'
+        comments = [
+            {u'comment': u'Looks suspicious', u'status': u'ok'}
+        ]
+        payload = {
+            u'status': status,
+            u'comments': comments
+        }
+        app.logger.info('Calling back to %s', callback_url)
+        response = app.client.post(callback_url, json=payload).json()
+    except Exception as ex:
+        app.logger.exception('in review callback')
+        if hasattr(ex, 'response'):
+            app.logger.info('LMS error response: %r', ex.response.content)
+    else:
+        app.logger.info('Got review response from LMS: %s', response)
 
 
 if __name__ == '__main__':

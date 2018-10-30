@@ -1,5 +1,5 @@
 [[package]]
-category = "main"
+category = "dev"
 description = "Python package for providing Mozilla's CA Bundle."
 name = "certifi"
 optional = false
@@ -7,7 +7,7 @@ python-versions = "*"
 version = "2018.10.15"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Universal encoding detector for Python 2 and 3"
 name = "chardet"
 optional = false
@@ -23,8 +23,8 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 version = "7.0"
 
 [[package]]
-category = "main"
-description = ""
+category = "dev"
+description = "Slumber client used to access various edX Platform REST APIs."
 name = "edx-rest-api-client"
 optional = false
 python-versions = "*"
@@ -32,12 +32,8 @@ version = "1.9"
 
 [package.dependencies]
 PyJWT = ">=1.1.0,<2.0"
+requests = "*"
 slumber = ">=0.7.1,<1.0"
-
-[package.source]
-reference = "b7e8ee6bff7d4c211ba0b4668649b20c3e9ccbc8"
-type = "git"
-url = "https://github.com/edx/edx-rest-api-client.git"
 
 [[package]]
 category = "dev"
@@ -54,7 +50,7 @@ click = ">=5.1"
 itsdangerous = ">=0.24"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Internationalized Domain Names in Applications (IDNA)"
 name = "idna"
 optional = false
@@ -63,11 +59,11 @@ version = "2.7"
 
 [[package]]
 category = "dev"
-description = "Various helpers to pass trusted data to untrusted environments and back."
+description = "Various helpers to pass data to untrusted environments and back."
 name = "itsdangerous"
 optional = false
-python-versions = "*"
-version = "0.24"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+version = "1.1.0"
 
 [[package]]
 category = "dev"
@@ -118,7 +114,7 @@ python = ">=2.6.0,<2.8.0 || >=3.2.0,<3.4.0"
 version = "*"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "JSON Web Token implementation in Python"
 name = "pyjwt"
 optional = false
@@ -126,7 +122,7 @@ python-versions = "*"
 version = "1.6.4"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "Python HTTP for Humans."
 name = "requests"
 optional = false
@@ -158,7 +154,7 @@ python-versions = "*"
 version = "1.11.0"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "A library that makes consuming a REST API easier and more convenient"
 name = "slumber"
 optional = false
@@ -169,7 +165,7 @@ version = "0.7.1"
 requests = "*"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 name = "urllib3"
 optional = false
@@ -185,17 +181,17 @@ python-versions = "*"
 version = "0.14.1"
 
 [metadata]
-content-hash = "76b324ecc9b69ebdfac164cb0e0deab3206549a87ea071dd7336ae69e7846967"
+content-hash = "47fa09a64ece3c649fa5bb321a2e0c0e6e8701459b5cf7361bef48eb955d15ac"
 python-versions = "*"
 
 [metadata.hashes]
 certifi = ["339dc09518b07e2fa7eda5450740925974815557727d6bd35d319c1524a04a4c", "6d58c986d22b038c8c0df30d639f23a3e6d172a05c3583e766f4c0b785c0986a"]
 chardet = ["84ab92ed1c4d4f16916e05906b6b75a6c0fb5db821cc65e70cbd64a3e2a5eaae", "fc323ffcaeaed0e0a02bf4d117757b98aed530d9ed4531e3e15460124c106691"]
 click = ["2335065e6395b9e67ca716de5f7526736bfa6ceead690adf616d925bdc622b13", "5b94b49521f6456670fdb30cd82a4eca9412788a93fa6dd6df72c94d5a8ff2d7"]
-edx-rest-api-client = []
+edx-rest-api-client = ["443016730ad10d6a8e68dc4cb86fad0e238241264d6f4fe6b7bf6412a7f51280", "ced793f4ddfdf0a8eaf85101fd845290d290a8f22da103e767e12cab743f1524"]
 flask = ["2271c0070dbcb5275fad4a82e29f23ab92682dc45f9dfbc22c02ba9b9322ce48", "a080b744b7e345ccfcbc77954861cb05b3c63786e93f2b3875e0913d44b43f05"]
 idna = ["156a6814fb5ac1fc6850fb002e0852d56c0c8d2531923a51032d1b70760e186e", "684a38a6f903c1d71d6d5fac066b58d7768af4de2b832e426ec79c30daa94a16"]
-itsdangerous = ["cbb3fcf8d3e33df861709ecaf89d9e6629cff0a217bc2848f1b41cd30d360519"]
+itsdangerous = ["321b033d07f2a4136d3ec762eac9f16a10ccd60f53c0c91af90217ace7ba1f19", "b12271b2047cb23eeb98c8b5622e2e5c5e9abd9784a153e9d8ef9cb4dd09d749"]
 jinja2 = ["74c935a1b8bb9a3947c50a54766a969d4846290e1e788ea44c1392163723c3bd", "f84be1bb0040caca4cea721fcbbbbd61f9be9464ca236387158b0feea01914a4"]
 markupsafe = ["a6be69091dac236ea9c6bc7d012beab42010fa914c459791d627dad4910eb665"]
 pathlib2 = ["8eb170f8d0d61825e09a95b38be068299ddeda82f35e96c3301a8a5e7604cb83", "d1aa2a11ba7b8f7b21ab852b1fb5afb277e1bb99d5dfc663380b5015c0d80c5a"]
