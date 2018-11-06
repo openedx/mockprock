@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='mockprock',
-    version='0.3',
+    version='0.4',
     description='Mock proctoring backend for Open edX',
     author='Dave St.Germain',
     author_email='davestgermain@edx.org',
@@ -36,7 +36,7 @@ setup(
             "flask",
             "pickleshare",
             "PyJWT",
-            'edx_rest_api_client>=1.9',
+            'edx_rest_api_client>=1.9.1',
         ]
     },
     entry_points={

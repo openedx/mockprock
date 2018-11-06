@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mockprock"
-version = "0.3"
+version = "0.4"
 description = "Mock proctoring backend for edX"
 authors = ["Dave St.Germain <dstgermain@edx.org>"]
 license = "AGPL"
@@ -11,7 +11,7 @@ python = "*"
 [tool.poetry.dev-dependencies]
 pickleshare = "*"
 PyJWT = "*"
-edx_rest_api_client = "^1.8"
+edx_rest_api_client = "^1.9"
 flask = "^1.0"
 
 [build-system]
