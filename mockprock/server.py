@@ -143,7 +143,7 @@ def exam_attempt_endpoint(exam_id, attempt_id):
     if request.method == 'PATCH':
         app.shelf[key].update(attempt)
         status = attempt.get('status')
-        if status == 'stop':
+        if status == 'submitted':
             app.logger.info('Finished attempt %s. Sending a fake review in 10 seconds...', attempt_id)
             threading.Timer(10, make_review_callback, args=[exam_id, attempt_id]).start()
         else:
