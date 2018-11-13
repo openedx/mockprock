@@ -16,3 +16,4 @@ class MockProckBackend(BaseRestProctoringProvider):
     base_url = u'http://host.docker.internal:11136'
     verbose_name = u'Mock Proctoring Service'
     needs_oauth = True
+    token_expiration_time = 86400

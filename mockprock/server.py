@@ -2,27 +2,28 @@
 Run this server with python -m mockprock.server {client_id} {client_secret}
 """
 import atexit
-from pprint import pprint
 import sys
 import threading
 import time
-import uuid
+from collections import Iterable
 from functools import wraps
+from pprint import pprint
 
 import jwt
+from flask import Flask, abort, jsonify, render_template, request
+
 from edx_rest_api_client.client import OAuthAPIClient
-from flask import Flask, abort, jsonify, request
-from pickleshare import PickleShareDB
+from mockprock.db import init_app
 
 app = Flask(__name__)
-app.shelf = PickleShareDB('/tmp/mockprock')
 app.debug = True
 app.secret_key = 'super secret'
+init_app(app)
 
 proctoring_config = {
     'download_url': 'http://host.docker.internal:11136/download',
     'name': 'MockProck',
-    'config': {
+    'rules': {
         'allow_cheating': 'Allow the student to cheat',
         'allow_notes': 'Allow the student to take notes',
     },
@@ -38,6 +39,7 @@ proctoring_config = {
 
 def get_download_url():
     return u'http://%s/download' % request.host
+
 
 def requires_token(f):
     @wraps(f)
@@ -71,6 +73,7 @@ def access_token():
         resp[u'expires_in'] = exp
     return jsonify(resp)
 
+
 @app.route('/v1/config/')
 @requires_token
 def get_config():
@@ -87,8 +90,9 @@ def get_exam(exam_id):
     """
     Returns the exam
     """
-    exam = app.shelf.get(exam_id, {})
+    exam = app.db.get_exam(exam_id) or {}
     return jsonify(exam)
+
 
 @app.route('/v1/exam/', methods=['POST'])
 @requires_token
@@ -97,12 +101,10 @@ def create_exam():
     Creates an exam, returning an external id
     """
     exam = request.json
-    exam_id = uuid.uuid4().hex
-    key = '%s/exam' % exam_id
-    app.shelf[key] = exam
-    app.logger.info('Saved exam %s from %s', exam_id, request.headers.get('Authorization'))
+    exam_id = app.db.save_exam(exam, request.headers.get('Authorization'))
     pprint(exam)
     return jsonify({u'id': exam_id})
+
 
 @app.route('/v1/exam/<exam_id>/', methods=['POST'])
 @requires_token
@@ -111,23 +113,21 @@ def update_exam(exam_id):
     Updates an exam, returning the exam
     """
     exam = request.json
-    key = '%s/exam' % exam_id
-    if app.shelf.get(key, None):
-        app.logger.info('Updated exam %s from %s', exam_id, request.headers.get('Authorization'))
-    else:
-        app.logger.info('Got confused update request for exam %s from %s', exam_id, request.headers.get('Authorization'))
-    app.shelf[key] = exam
+    exam['external_id'] = exam_id
+    app.db.save_exam(exam, request.headers.get('Authorization'))
     pprint(exam)
     return jsonify({u'id': exam_id})
+
 
 @app.route('/v1/exam/<exam_id>/attempt/', methods=['POST'])
 @requires_token
 def create_attempt(exam_id):
     attempt = request.json
-    attempt_id = uuid.uuid4().hex
-    app.shelf['%s/%s' % (exam_id, attempt_id)] = attempt
-    app.logger.info('Created attempt %s from %r', attempt_id, attempt)
+    attempt['exam_id'] = exam_id
+    app.db.save_attempt(attempt)
+    attempt_id = attempt['id']
     return jsonify({u'id': attempt_id})
+
 
 @app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'PATCH'])
 @requires_token
@@ -139,9 +139,10 @@ def exam_attempt_endpoint(exam_id, attempt_id):
     """
     attempt = request.json
     response = {'id': attempt_id}
-    key = '%s/%s' % (exam_id, attempt_id)
+    dbattempt = app.db.get_attempt(exam_id, attempt_id)
     if request.method == 'PATCH':
-        app.shelf[key].update(attempt)
+        dbattempt.update(attempt)
+        app.db.save_attempt(dbattempt)
         status = attempt.get('status')
         if status == 'submitted':
             app.logger.info('Finished attempt %s. Sending a fake review in 10 seconds...', attempt_id)
@@ -151,11 +152,48 @@ def exam_attempt_endpoint(exam_id, attempt_id):
         response['status'] = status
     elif request.method == 'GET':
         download_url = u'{}?attempt={}&exam={}'.format(get_download_url(), attempt_id, exam_id)
-        response = app.shelf.get(key, {})
+        response = dbattempt
         response[u'download_url'] = download_url
         response[u'instructions'] = proctoring_config['instructions']
-        response[u'config'] = app.shelf.get('%s/exam' % exam_id, {}).get('config', {})
+        response[u'rules'] = app.db.get_exam(exam_id).get('rules', {})
     return jsonify(response)
+
+
+class CourseIdIterator(Iterable):
+    def __init__(self, client_id):
+        self.client_id = client_id
+
+    def __iter__(self):
+        for exam in app.db.get_exams():
+            yield exam['course_id']
+
+
+@app.route('/v1/instructor/<client_id>/')
+def instructor_dashboard(client_id):
+    secret = client_id + 'secret'
+    token = request.args.get('jwt')
+    if not token:
+        abort(403, 'JWT token required')
+    decoded = jwt.decode(token, secret, issuer=client_id, audience=CourseIdIterator(client_id))
+    course_id = decoded['aud']
+    exams = []
+    for exam_id in decoded.get('exam', []):
+        exam = app.db.get_exam(exam_id)
+        exams.append(exam)
+
+    for exam in app.db.get_exams():
+        if exam['course_id'] == course_id:
+            exams.append(exam)
+
+    context = {
+        'client_id': client_id,
+        'token': decoded,
+        'course_id': decoded['aud'],
+        'exams': exams,
+        'attempt_ids': decoded.get('attempt', []),
+    }
+    return render_template('dashboard.html', **context)
+
 
 @app.route('/download')
 def software_download():
@@ -165,27 +203,15 @@ def software_download():
     """
     attempt_id = request.args.get('attempt')
     exam_id = request.args.get('exam')
-    attempt = app.shelf.get('%s/%s' % (exam_id,attempt_id), {})
+    attempt = app.db.get_attempt(exam_id, attempt_id)
     app.logger.info('Requesting download for attempt %s', attempt_id)
-    dl = '''
-<html>
-<head>
-</head>
-    <body><h1>Downloading...</h1>
-    <p>You're pretending to download the MockProck desktop software</p>
-    <p>In fact, you'll be redirected back to the exam...</p>
-<script>
-setTimeout(window.close, 10000);
-</script>
-    </body>
-</html>
-    '''
     threading.Timer(2, make_ready_callback, args=[attempt_id, attempt]).start()
-    return dl
+    return render_template('download.html', attempt_id=attempt_id, exam_id=exam_id)
+
 
 def make_ready_callback(attempt_id, attempt):
     try:
-        callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/ready' % (attempt['lms_host'], attempt_id)
+        callback_url = u'%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/ready' % (attempt['lms_host'], attempt_id)
         payload = {
             u'status': u'ready'
         }
@@ -197,11 +223,12 @@ def make_ready_callback(attempt_id, attempt):
         if hasattr(ex, 'response'):
             app.logger.info('LMS error response: %r', ex.response.content)
 
+
 def make_review_callback(exam_id, attempt_id):
     try:
-        attempt = app.shelf['%s/%s' % (exam_id, attempt_id)]
+        attempt = app.db.get_attempt(exam_id, attempt_id)
         callback_url = '%s/api/edx_proctoring/v1/proctored_exam/attempt/%s/reviewed' % (attempt['lms_host'], attempt_id)
-        status = u'verified'
+        status = u'passed'
         comments = [
             {u'comment': u'Looks suspicious', u'status': u'ok'}
         ]

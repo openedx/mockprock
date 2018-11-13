@@ -1,0 +1,18 @@
+<html>
+<head>
+    <title>Dashboard for {{client_id}}</title>
+</head>
+<body>
+<h1>MockProck Dashboard for Course {{course_id}}</h1>
+
+<h2>Exams</h2>
+{% for exam in exams %}
+<pre>{{exam|pprint}}</pre>
+{% endfor %}
+
+<h2>Token</h2>
+<pre>
+{{token|pprint}}
+</pre>
+</body>
+</html>
