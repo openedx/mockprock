@@ -14,11 +14,15 @@ from flask import Flask, abort, jsonify, render_template, request
 
 from edx_rest_api_client.client import OAuthAPIClient
 from mockprock.db import init_app
+from mockprock.desktop_views import fake_application
+
 
 app = Flask(__name__)
 app.debug = True
 app.secret_key = 'super secret'
 init_app(app)
+
+app.register_blueprint(fake_application)
 
 proctoring_config = {
     'download_url': 'http://host.docker.internal:11136/download',
