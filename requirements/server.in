@@ -1,0 +1,5 @@
+# Requirements for running the mockprock server
+
+Flask<2.0
+PyJWT
+edx_rest_api_client>=1.9.2

@@ -8,6 +8,34 @@ import sys
 
 from setuptools import setup
 
+def load_requirements(*requirements_paths):
+    """
+    Load all requirements from the specified requirements files.
+    Returns a list of requirement strings.
+    """
+    requirements = set()
+    for path in requirements_paths:
+        requirements.update(
+            line.split('#')[0].strip() for line in open(path)
+            if is_requirement(line.strip())
+        )
+    return list(requirements)
+
+
+def is_requirement(line):
+    """
+    Return True if the requirement line is a package requirement;
+    that is, it is not blank, a comment, a URL, or an included file.
+    """
+    return not (
+        line == '' or
+        line.startswith('-r') or
+        line.startswith('#') or
+        line.startswith('-e') or
+        line.startswith('git+')
+    )
+
+
 setup(
     name='mockprock',
     version='0.6',
@@ -18,7 +46,7 @@ setup(
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+        'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -28,15 +56,9 @@ setup(
         'mockprock',
     ],
     include_package_data=True,
-    install_requires=[
-        "setuptools",
-    ],
+    install_requires=load_requirements("requirements/base.txt"),
     extras_require={
-        'server': [
-            "flask",
-            "PyJWT",
-            'edx_rest_api_client>=1.9.2',
-        ]
+        'server': load_requirements("requirements/server.txt"),
     },
     entry_points={
         'openedx.proctoring': [
@@ -44,5 +66,4 @@ setup(
         ],
         'console_scripts': ['get-dashboard=mockprock.commands:get_url'],
     },
-
 )
