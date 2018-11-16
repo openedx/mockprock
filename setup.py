@@ -10,7 +10,7 @@ from setuptools import setup
 
 setup(
     name='mockprock',
-    version='0.5',
+    version='0.6',
     description='Mock proctoring backend for Open edX',
     author='Dave St.Germain',
     author_email='davestgermain@edx.org',

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mockprock"
-version = "0.5"
+version = "0.6"
 description = "Mock proctoring backend for edX"
 authors = ["Dave St.Germain <dstgermain@edx.org>"]
 license = "AGPL"

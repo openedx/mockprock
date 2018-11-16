@@ -74,7 +74,7 @@ def access_token():
     return jsonify(resp)
 
 
-@app.route('/v1/config/')
+@app.route('/api/v1/config/')
 @requires_token
 def get_config():
     """
@@ -84,7 +84,7 @@ def get_config():
     return jsonify(proctoring_config)
 
 
-@app.route('/v1/exam/<exam_id>/', methods=['GET'])
+@app.route('/api/v1/exam/<exam_id>/', methods=['GET'])
 @requires_token
 def get_exam(exam_id):
     """
@@ -94,7 +94,7 @@ def get_exam(exam_id):
     return jsonify(exam)
 
 
-@app.route('/v1/exam/', methods=['POST'])
+@app.route('/api/v1/exam/', methods=['POST'])
 @requires_token
 def create_exam():
     """
@@ -106,7 +106,7 @@ def create_exam():
     return jsonify({u'id': exam_id})
 
 
-@app.route('/v1/exam/<exam_id>/', methods=['POST'])
+@app.route('/api/v1/exam/<exam_id>/', methods=['POST'])
 @requires_token
 def update_exam(exam_id):
     """
@@ -119,7 +119,7 @@ def update_exam(exam_id):
     return jsonify({u'id': exam_id})
 
 
-@app.route('/v1/exam/<exam_id>/attempt/', methods=['POST'])
+@app.route('/api/v1/exam/<exam_id>/attempt/', methods=['POST'])
 @requires_token
 def create_attempt(exam_id):
     attempt = request.json
@@ -129,7 +129,7 @@ def create_attempt(exam_id):
     return jsonify({u'id': attempt_id})
 
 
-@app.route('/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'PATCH'])
+@app.route('/api/v1/exam/<exam_id>/attempt/<attempt_id>/', methods=['GET', 'PATCH'])
 @requires_token
 def exam_attempt_endpoint(exam_id, attempt_id):
     """
@@ -168,14 +168,14 @@ class CourseIdIterator(Iterable):
             yield exam['course_id']
 
 
-@app.route('/v1/instructor/<client_id>/')
+@app.route('/api/v1/instructor/<client_id>/')
 def instructor_dashboard(client_id):
     secret = client_id + 'secret'
     token = request.args.get('jwt')
     if not token:
         abort(403, 'JWT token required')
-    decoded = jwt.decode(token, secret, issuer=client_id, audience=CourseIdIterator(client_id))
-    course_id = decoded['aud']
+    decoded = jwt.decode(token, secret, issuer=client_id, course_id=CourseIdIterator(client_id))
+    course_id = decoded['course_id']
     exams = []
     for exam_id in decoded.get('exam', []):
         exam = app.db.get_exam(exam_id)
@@ -188,7 +188,7 @@ def instructor_dashboard(client_id):
     context = {
         'client_id': client_id,
         'token': decoded,
-        'course_id': decoded['aud'],
+        'course_id': course_id,
         'exams': exams,
         'attempt_ids': decoded.get('attempt', []),
     }
