@@ -1,5 +1,5 @@
 {
-  "name": "mockprock",
+  "name": "@edx/mockprock",
   "version": "1.0.0",
   "description": "Mock proctoring backend for Open edX",
   "main": "static/index.js",
@@ -8,16 +8,16 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/davestgermain/mockprock.git"
+    "url": "git+https://github.com/edx/mockprock.git"
   },
   "keywords": [
     "proctoring",
     "OpenedX"
   ],
   "author": "Dave St.Germain",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/davestgermain/mockprock/issues"
+    "url": "https://github.com/edx/mockprock/issues"
   },
-  "homepage": "https://github.com/davestgermain/mockprock#readme"
+  "homepage": "https://github.com/edx/mockprock#readme",
 }
