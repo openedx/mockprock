@@ -1,15 +1,15 @@
 console.log('hello from MockProck!');
 
 class MockProctoringEventHandler {
-  onStartExam() {
+  onStartExamAttempt() {
     return new Promise(function(resolve, reject) {
-      console.log("MockProctoringEventHandler - onStartExam() called");
+      console.log("MockProctoringEventHandler - onStartExamAttempt() called");
       setTimeout(resolve, 1000);
     });
   }
-  onEndExam() {
+  onEndExamAttempt() {
     return new Promise((resolve, reject) => {
-      console.log("MockProctoringEventHandler - onEndExam() called");
+      console.log("MockProctoringEventHandler - onEndExamAttempt() called");
       setTimeout(resolve, 1000);
     });
   }
