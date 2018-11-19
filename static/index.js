@@ -1,6 +1,11 @@
+import { handlerWrapper } from '@edx/edx-proctoring';
+
 console.log('hello from MockProck!');
 
 class MockProctoringEventHandler {
+  constructur({baseUrl = 'localhost'}) {
+    this.baseUrl = baseUrl;
+  }
   onStartExamAttempt() {
     return new Promise(function(resolve, reject) {
       console.log("MockProctoringEventHandler - onStartExamAttempt() called");
@@ -21,4 +26,4 @@ class MockProctoringEventHandler {
   }
 }
 
-export default MockProctoringEventHandler;
+export default handlerWrapper(MockProctoringEventHandler);
