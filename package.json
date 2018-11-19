@@ -20,4 +20,7 @@
     "url": "https://github.com/edx/mockprock/issues"
   },
   "homepage": "https://github.com/edx/mockprock#readme",
+  "dependencies": {
+    "@edx/edx-proctoring": "file:../edx-proctoring"
+  }
 }
