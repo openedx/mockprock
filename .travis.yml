@@ -8,4 +8,4 @@ deploy:
     secure: PU4R1+72TLKMSI7UG+bAUGxutuv82jenl7HNf2tc0NgYd03Zu+c0Z6KPyJca1d+6dPxa6L+fX/AO1wDHbNuyV6QrymRcheYxDkCZMVgOdAw0pssCNiPGZXVSKNCn8pZx6l2t0tPsD1Hn5AmcYPb7llYFtG7u42r8DyVTqfYggGBdyeL7rvjbrLxk2H5l0Pv3Z9dTYZZfl40Vxh2b3A45qAv61M8w2fWVclaLsynsxlTxwZhqbjXp4B8mM2mp1xE3C2M3iviZAmWQfUd6n05z04qv+1ashe13gvfJVkXTJ7wi/SArv1noGa0zWR8YlHAXKzdnYtdCR1KOw2llwXC7yZnkZQRWpnczEZg27ILubFUS2hH2xy1+CfVyGilXA+Rm19oKqZGv74yFhFoTYfK3aQ3kGOScdb18b0NnoWLaQuMWNIqXW/SXRXAJGXriCm+KTwbyz/D3/G3nNHzr0Z2fY+bv6mpXD4vsdGx/86DwFWK240AL9NUZP1EqeBKBkT3CoJKGugXjF5o5lyHyGUXrm/gb9vQThRmrAaghD5thlCDcAcUDOiFu8OQh63zs4Oe4qzyyjNRLNimck1MTZSxt+BXOtLPObhBPPyVX9Y3vEh2+a55r/H6ufob6fvcD4NmRPxk7uUIa5IuKKpT6TUrUhbvfst7nksdqWbhmG5Moqwk=
   on:
     tags: true
-    condition: $TRAVIS_TAG =~ ^npmv[0-9]+\.[0-9]+\.[0-9]+$
+    condition: $TRAVIS_TAG =~ ^npmv.*$
