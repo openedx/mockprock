@@ -21,6 +21,6 @@
   },
   "homepage": "https://github.com/edx/mockprock#readme",
   "dependencies": {
-    "@edx/edx-proctoring": "file:../edx-proctoring"
+    "@edx/edx-proctoring": "git+https://git@github.com/edx/edx-proctoring.git#dahlia/proctoring-master"
   }
 }
