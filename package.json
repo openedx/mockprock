@@ -1,6 +1,6 @@
 {
   "name": "@edx/mockprock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Mock proctoring backend for Open edX",
   "main": "static/index.js",
   "scripts": {
@@ -10,6 +10,9 @@
     "type": "git",
     "url": "git+https://github.com/edx/mockprock.git"
   },
+  "files": [
+    "/static"
+  ],
   "publishConfig": {
     "access": "public"
   },
