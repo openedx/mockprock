@@ -17,3 +17,5 @@ class MockProckBackend(BaseRestProctoringProvider):
     verbose_name = u'Mock Proctoring Service'
     needs_oauth = True
     token_expiration_time = 86400
+    npm_module = '@edx/mockprock'
+
