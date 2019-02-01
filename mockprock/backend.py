@@ -19,3 +19,5 @@ class MockProckBackend(BaseRestProctoringProvider):
     tech_support_phone = '+1 605 475 6968'
     needs_oauth = True
     token_expiration_time = 86400
+    npm_module = '@edx/mockprock'
+
