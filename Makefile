@@ -1,4 +1,4 @@
-.PHONY: help clean upgrade requirements
+.PHONY: help clean upgrade requirements test-python test quality quality-python
 
 .DEFAULT_GOAL := help
 
@@ -20,6 +20,19 @@ upgrade: ## update the requirements/*.txt files with the latest packages satisfy
 	pip install -q pip-tools
 	pip-compile --upgrade -o requirements/base.txt requirements/base.in
 	pip-compile --upgrade -o requirements/server.txt requirements/server.in
+	pip-compile --upgrade -o requirements/testing.txt requirements/testing.in
 
 requirements: ## install development environment requirements
 	pip install -qr requirements/base.txt
+	pip install -qr requirements/testing.txt
+
+
+quality-python: ## Run python linters
+	pylint --rcfile=pylintrc mockprock setup.py
+
+quality: quality-python ## Run linters
+
+test-python: clean ## run tests using pytest and generate coverage report
+	pytest
+
+test: test-python ## run tests

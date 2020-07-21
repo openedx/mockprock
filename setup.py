@@ -38,7 +38,7 @@ def is_requirement(line):
 
 setup(
     name='mockprock',
-    version='0.6',
+    version='1.0.2',
     description='Mock proctoring backend for Open edX',
     author='Dave St.Germain',
     author_email='davestgermain@edx.org',
