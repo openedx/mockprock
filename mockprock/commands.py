@@ -1,5 +1,4 @@
 """Command line utilities"""
-from __future__ import print_function
 import argparse
 from mockprock.backend import MockProckBackend
 

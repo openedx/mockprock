@@ -16,7 +16,7 @@ def init_app(app):
     app.db.setup()
 
 
-class DB(object):
+class DB:
     def __init__(self, dbpath, logger):
         self.dbpath = dbpath
         self.logger = logger
