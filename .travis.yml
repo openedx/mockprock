@@ -1,6 +1,5 @@
 language: node_js
-script:
-  echo TODO -- implement eslint for ci
+script: echo TODO -- implement eslint for ci
 deploy:
   provider: npm
   email: oscm@edx.org
