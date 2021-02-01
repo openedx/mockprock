@@ -50,7 +50,7 @@ def requires_token(f):
     def _func(*args, **kwargs):
         token = request.headers.get('Authorization', ' ').split(' ')[1]
         try:
-            jwt.decode(token, app.secret_key, verify=False)
+            jwt.decode(token, app.secret_key, options={'verify_signature': False}, algorithms=["HS256"])
         except jwt.DecodeError:
             abort(403)
         else:
@@ -72,8 +72,8 @@ def access_token():
     if client_secret == client_id + 'secret':
         exp = 3600
         payload = {'aud': client_id, 'exp': time.time() + exp}
-        token = jwt.encode(payload, app.secret_key)
-        resp['access_token'] = token.decode('utf8')
+        token = jwt.encode(payload, app.secret_key, algorithm="HS256")
+        resp['access_token'] = token
         resp['expires_in'] = exp
     return jsonify(resp)
 
@@ -178,7 +178,7 @@ def instructor_dashboard(client_id):
     token = request.args.get('jwt')
     if not token:
         abort(403, 'JWT token required')
-    decoded = jwt.decode(token, secret, issuer=client_id, course_id=CourseIdIterator(client_id))
+    decoded = jwt.decode(token, secret, issuer=client_id, course_id=CourseIdIterator(client_id), algorithms=["HS256"])
     course_id = decoded['course_id']
     exams = []
     for exam_id in decoded.get('exam', []):
