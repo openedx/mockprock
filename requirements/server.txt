@@ -4,59 +4,27 @@
 #
 #    make upgrade
 #
-asgiref==3.3.1
-    # via django
 certifi==2020.12.5
     # via requests
 chardet==4.0.0
     # via requests
 click==7.1.2
     # via flask
-django-crum==0.7.9
-    # via edx-django-utils
-django-waffle==2.0.0
-    # via edx-django-utils
-django==3.1.5
-    # via
-    #   django-crum
-    #   edx-django-utils
-edx-django-utils==3.13.0
-    # via edx-rest-api-client
-edx-rest-api-client==5.2.3
-    # via -r requirements/server.in
 flask==1.1.2
     # via -r requirements/server.in
 idna==2.10
     # via requests
 itsdangerous==1.1.0
     # via flask
-jinja2==2.11.2
+jinja2==2.11.3
     # via flask
 markupsafe==1.1.1
     # via jinja2
-newrelic==5.24.0.153
-    # via edx-django-utils
-pbr==5.5.1
-    # via stevedore
-psutil==5.8.0
-    # via edx-django-utils
-pyjwt==2.0.0
-    # via
-    #   -r requirements/server.in
-    #   edx-rest-api-client
-pytz==2020.5
-    # via django
+pyjwt==2.0.1
+    # via -r requirements/server.in
 requests==2.25.1
-    # via
-    #   edx-rest-api-client
-    #   slumber
-slumber==0.7.1
-    # via edx-rest-api-client
-sqlparse==0.4.1
-    # via django
-stevedore==3.3.0
-    # via edx-django-utils
-urllib3==1.26.2
+    # via -r requirements/server.in
+urllib3==1.26.3
     # via requests
 werkzeug==1.0.1
     # via flask
