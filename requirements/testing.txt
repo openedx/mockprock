@@ -23,12 +23,12 @@ code-annotations==1.1.0
     # via edx-lint
 coverage==5.4
     # via pytest-cov
-django==3.1.6
+django==3.1.10
     # via
     #   code-annotations
     #   edx-lint
 edx-lint==3.0.2
-    # via -r requirements/testing.in
+    # via -r testing.in
 iniconfig==1.1.1
     # via pytest
 isort==5.7.0
@@ -66,7 +66,7 @@ pylint==2.6.0
 pyparsing==2.4.7
     # via packaging
 pytest-cov==2.11.1
-    # via -r requirements/testing.in
+    # via -r testing.in
 pytest==6.2.2
     # via pytest-cov
 python-slugify==4.0.1
