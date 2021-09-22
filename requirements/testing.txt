@@ -12,23 +12,23 @@ astroid==2.4.2
     #   pylint-celery
 attrs==20.3.0
     # via pytest
-click-log==0.3.2
-    # via edx-lint
 click==7.1.2
     # via
     #   click-log
     #   code-annotations
     #   edx-lint
+click-log==0.3.2
+    # via edx-lint
 code-annotations==1.1.0
     # via edx-lint
 coverage==5.4
     # via pytest-cov
-django==3.1.6
+django==3.1.13
     # via
     #   code-annotations
     #   edx-lint
 edx-lint==3.0.2
-    # via -r requirements/testing.in
+    # via -r testing.in
 iniconfig==1.1.1
     # via pytest
 isort==5.7.0
@@ -49,6 +49,12 @@ pluggy==0.13.1
     # via pytest
 py==1.10.0
     # via pytest
+pylint==2.6.0
+    # via
+    #   edx-lint
+    #   pylint-celery
+    #   pylint-django
+    #   pylint-plugin-utils
 pylint-celery==0.3
     # via edx-lint
 pylint-django==2.4.2
@@ -57,18 +63,12 @@ pylint-plugin-utils==0.6
     # via
     #   pylint-celery
     #   pylint-django
-pylint==2.6.0
-    # via
-    #   edx-lint
-    #   pylint-celery
-    #   pylint-django
-    #   pylint-plugin-utils
 pyparsing==2.4.7
     # via packaging
-pytest-cov==2.11.1
-    # via -r requirements/testing.in
 pytest==6.2.2
     # via pytest-cov
+pytest-cov==2.11.1
+    # via -r testing.in
 python-slugify==4.0.1
     # via code-annotations
 pytz==2021.1
