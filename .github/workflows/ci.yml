@@ -31,16 +31,3 @@ jobs:
           semantic_version: 16
         env:
           NPM_TOKEN: ${{ secrets.SEMANTIC_RELEASE_NPM_TOKEN }}
-
-      - name: Send failure notification
-        if: ${{ failure() }}
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: email-smtp.us-east-1.amazonaws.com
-          server_port: 465
-          username: ${{ secrets.EDX_SMTP_USERNAME }}
-          password: ${{ secrets.EDX_SMTP_PASSWORD }}
-          subject: NPM Release Failure
-          to: oscm@edx.org
-          from: github-actions <github-actions@edx.org>
-          body: NPM release workflow in ${{github.repository}} failed! For details see "github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
