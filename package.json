@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/edx/mockprock#readme",
   "dependencies": {
-    "@edx/edx-proctoring": "^1.5.0-rc.1"
+    "@edx/edx-proctoring": "^4.9.0"
   }
 }
