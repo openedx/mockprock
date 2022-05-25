@@ -11,7 +11,7 @@ chardet==4.0.0
 click==7.1.2
     # via flask
 flask==1.1.2
-    # via -r requirements/server.in
+    # via -r server.in
 idna==2.10
     # via requests
 itsdangerous==1.1.0
@@ -20,10 +20,10 @@ jinja2==2.11.3
     # via flask
 markupsafe==1.1.1
     # via jinja2
-pyjwt==2.0.1
-    # via -r requirements/server.in
+pyjwt==2.4.0
+    # via -r server.in
 requests==2.25.1
-    # via -r requirements/server.in
+    # via -r server.in
 urllib3==1.26.3
     # via requests
 werkzeug==1.0.1
