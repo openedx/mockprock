@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/edx/mockprock.git"
+    "url": "git+https://github.com/openedx/mockprock.git"
   },
   "files": [
     "/static"
@@ -23,9 +23,9 @@
   "author": "Dave St.Germain",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/edx/mockprock/issues"
+    "url": "https://github.com/openedx/mockprock/issues"
   },
-  "homepage": "https://github.com/edx/mockprock#readme",
+  "homepage": "https://github.com/openedx/mockprock#readme",
   "dependencies": {
     "@edx/edx-proctoring": "^4.9.0"
   }
