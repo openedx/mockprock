@@ -28,8 +28,8 @@ class MockProctoringEventHandler {
   constructor({baseUrl = 'http://localhost:11136'}) {
     this.baseUrl = baseUrl;
   }
-  onStartExamAttempt() {
-    console.log("MockProctoringEventHandler - onStartExamAttempt() called");
+  onStartExamAttempt(timeout, attemptId) {
+    console.log(`MockProctoringEventHandler - onStartExamAttempt(${timeout} ${attemptId}) called`);
     return makeRequest({url: `${this.baseUrl}/desktop/start`, method: 'POST'})
       .then(response => response.status === "running" ? Promise.resolve() : Promise.reject());
   }
@@ -38,8 +38,8 @@ class MockProctoringEventHandler {
     return makeRequest({url: `${this.baseUrl}/desktop/stop`, method: 'POST'})
       .then(response => response.status === "uploading" ? Promise.resolve() : Promise.reject());
   }
-  onPing() {
-    console.log("MockProctoringEventHandler - onPing() called");
+  onPing(timeout) {
+    console.log(`MockProctoringEventHandler - onPing(${timeout}) called`);
     return makeRequest({url: `${this.baseUrl}/desktop/ping`, method: 'GET'})
       .then(response => response.status === "running" ? Promise.resolve() : Promise.reject());
   }
