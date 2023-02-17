@@ -5,7 +5,7 @@ They support starting a session, stopping a session, and pinging for availabilit
 from flask import Blueprint, jsonify
 import time
 
-fake_application = Blueprint(__name__, 'mockprock')
+fake_application = Blueprint('mockprock', __name__)
 
 # this assumes there's only one application "running". haha
 fake_application.desktop_status = None
