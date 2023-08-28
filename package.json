@@ -27,6 +27,6 @@
   },
   "homepage": "https://github.com/openedx/mockprock#readme",
   "dependencies": {
-    "@edx/edx-proctoring": "^4.16.1"
+    "@edx/edx-proctoring": "4.16.1"
   }
 }
