@@ -10,6 +10,7 @@
       ":semanticCommits",
       ":updateNotScheduled"
     ],
+    
     "packageRules": [
       {
         "matchDepTypes": [
