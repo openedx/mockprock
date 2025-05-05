@@ -36,7 +36,7 @@ def is_requirement(line):
 
 setup(
     name='mockprock',
-    version='1.0.2',
+    version='2.0.0',
     description='Mock proctoring backend for Open edX',
     author='Dave St.Germain',
     author_email='davestgermain@edx.org',
@@ -47,8 +47,8 @@ setup(
         'License :: OSI Approved :: Apache Software License',
         'Natural Language :: English',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.5',
-        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
     ],
     packages=[
         'mockprock',
