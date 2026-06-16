@@ -4,27 +4,32 @@
 #
 #    make upgrade
 #
+blinker==1.9.0
+    # via flask
 certifi==2025.1.31
     # via requests
 charset-normalizer==3.4.1
     # via requests
-click==7.1.2
+click==8.3.1
     # via flask
-flask==1.1.4
-    # via -r requirements/server.in
+flask==3.1.3
+    # via -r server.in
 idna==3.10
     # via requests
-itsdangerous==1.1.0
+itsdangerous==2.2.0
     # via flask
-jinja2==2.11.3
+jinja2==3.1.6
     # via flask
 markupsafe==3.0.2
-    # via jinja2
+    # via
+    #   flask
+    #   jinja2
+    #   werkzeug
 pyjwt==2.10.1
-    # via -r requirements/server.in
+    # via -r server.in
 requests==2.32.3
-    # via -r requirements/server.in
+    # via -r server.in
 urllib3==2.4.0
     # via requests
-werkzeug==1.0.1
+werkzeug==3.1.6
     # via flask

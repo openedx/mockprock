@@ -1,5 +1,5 @@
 # Requirements for running the mockprock server
 
-Flask<2.0
+Flask<4.0
 PyJWT
 requests
