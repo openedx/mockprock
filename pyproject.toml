@@ -1,0 +1,143 @@
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mockprock"
+dynamic = ["version"]
+description = "Mock proctoring backend for Open edX"
+readme = "README.rst"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+authors = [
+    {name = "Open edX Project", email = "oscm@openedx.org"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+keywords = [
+    "Python",
+    "edx",
+    "openedx",
+    "proctoring",
+]
+dependencies = []
+
+[project.optional-dependencies]
+server = [
+    "Flask>=2.0",
+    "PyJWT",
+    "requests",
+]
+
+[project.entry-points."openedx.proctoring"]
+mockprock = "mockprock.backend:MockProckBackend"
+
+[project.scripts]
+get-dashboard = "mockprock.commands:get_url"
+
+[project.urls]
+Repository = "https://github.com/openedx/mockprock"
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "*.tests", "*.tests.*"]
+
+[tool.setuptools_scm]
+version_scheme = "only-version"
+local_scheme = "no-local-version"
+# Only match Python version tags (v1.2.3 or 1.2.3), not npm tags (npmv1.0.0)
+tag_regex = "^(?:v)?(?P<version>[0-9]+(?:\\.[0-9]+){0,2}[^\\+]*)(?:\\+.*)?$"
+fallback_version = "0.0.0"
+
+[dependency-groups]
+test = [
+    "pytest",
+    "pytest-cov",
+]
+quality = [
+    "ruff",
+]
+ci = [
+    "tox",
+    "tox-uv",
+]
+dev = [
+    {include-group = "test"},
+    {include-group = "quality"},
+    "edx-lint",
+]
+
+# uv configuration
+# https://docs.astral.sh/uv/reference/settings/
+[tool.uv]
+package = true
+
+# edx-lint uv constraint support
+# https://github.com/openedx/edx-lint
+[tool.edx_lint]
+# This section is read by edx-lint; do not edit the constraint-dependencies directly.
+
+# Ruff configuration
+# https://docs.astral.sh/ruff/configuration/
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",      # pycodestyle errors
+    "W",      # pycodestyle warnings
+    "F",      # pyflakes
+    "I",      # isort
+    "B",      # flake8-bugbear
+    "C4",     # flake8-comprehensions
+    "UP",     # pyupgrade
+]
+ignore = [
+    "E501",   # line too long (handled by formatter)
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# Pytest configuration
+# https://docs.pytest.org/en/stable/reference/customize.html
+[tool.pytest.ini_options]
+addopts = "--cov mockprock --cov-report term-missing --cov-report xml"
+
+# Coverage configuration
+# https://coverage.readthedocs.io/en/latest/config.html
+[tool.coverage.run]
+branch = true
+source = ["mockprock"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+[tool.coverage.html]
+directory = "htmlcov"
+
+# Semantic Release configuration
+# https://python-semantic-release.readthedocs.io/
+[tool.semantic_release]
+# Use SETUPTOOLS_SCM_PRETEND_VERSION to set version at build time since the
+# build step happens before the repo gets tagged.
+build_command = "pip install build && SETUPTOOLS_SCM_PRETEND_VERSION=$NEW_VERSION python -m build"
