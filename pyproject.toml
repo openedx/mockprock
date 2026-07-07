@@ -50,14 +50,18 @@ exclude = ["tests*", "*.tests", "*.tests.*"]
 [tool.setuptools_scm]
 version_scheme = "only-version"
 local_scheme = "no-local-version"
-# Only match Python version tags (v1.2.3 or 1.2.3), not npm tags (npmv1.0.0)
-tag_regex = "^(?:v)?(?P<version>[0-9]+(?:\\.[0-9]+){0,2}[^\\+]*)(?:\\+.*)?$"
+# mockprock only has npm-style git tags (npmv*), not Python version tags.
+# Use git describe with a match pattern to avoid matching npm tags; when no
+# Python version tag is found, git describe exits non-zero and setuptools-scm
+# falls back to fallback_version instead of raising on the unparseable tag.
+git_describe_command = ["git", "describe", "--dirty", "--tags", "--long", "--match", "v[0-9]*", "--match", "[0-9]*"]
 fallback_version = "0.0.0"
 
 [dependency-groups]
 test = [
     "pytest",
     "pytest-cov",
+    "requests",
 ]
 quality = [
     "ruff",

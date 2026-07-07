@@ -1,6 +1,7 @@
 """
 Auth code ripped out of edx-rest-api-client for use here
 """
+
 from requests.auth import AuthBase
 
 
@@ -13,6 +14,5 @@ class SuppliedJwtAuth(AuthBase):
 
     def __call__(self, r):
         """Update the request headers."""
-        r.headers['Authorization'] = 'JWT {jwt}'.format(jwt=self.token)
+        r.headers["Authorization"] = f"JWT {self.token}"
         return r
-

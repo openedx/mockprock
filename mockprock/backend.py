@@ -13,11 +13,10 @@ from edx_proctoring.backends.rest import BaseRestProctoringProvider
 
 
 class MockProckBackend(BaseRestProctoringProvider):
-    base_url = 'http://host.docker.internal:11136'
-    verbose_name = 'Mock Proctoring Service'
-    tech_support_email = 'support@youjustgotmockprockd.com'
-    tech_support_phone = '+1 605 475 6968'
+    base_url = "http://host.docker.internal:11136"
+    verbose_name = "Mock Proctoring Service"
+    tech_support_email = "support@youjustgotmockprockd.com"
+    tech_support_phone = "+1 605 475 6968"
     needs_oauth = True
     token_expiration_time = 86400
-    npm_module = '@edx/mockprock'
-
+    npm_module = "@edx/mockprock"

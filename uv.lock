@@ -491,6 +491,7 @@ dev = [
     { name = "edx-lint" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "requests" },
     { name = "ruff" },
 ]
 quality = [
@@ -499,6 +500,7 @@ quality = [
 test = [
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "requests" },
 ]
 
 [package.metadata]
@@ -518,12 +520,14 @@ dev = [
     { name = "edx-lint" },
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "requests" },
     { name = "ruff" },
 ]
 quality = [{ name = "ruff" }]
 test = [
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "requests" },
 ]
 
 [[package]]
