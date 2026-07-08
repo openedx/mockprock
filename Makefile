@@ -14,14 +14,14 @@ upgrade:  ## Upgrade and regenerate pinned dependencies
 	uv lock --upgrade
 
 lint:  ## Run linting checks
-	tox -e lint
+	uv run tox -e lint
 
 format:  ## Auto-fix formatting and import order issues
 	uv run ruff check --fix .
 	uv run ruff format .
 
 test:  ## Run tests
-	tox -e py311-test
+	uv run tox -e py311-test
 
 clean:  ## Clean cache, test, and build directories
 	rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .ruff_cache/ htmlcov/

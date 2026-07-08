@@ -502,6 +502,10 @@ test = [
     { name = "pytest-cov" },
     { name = "requests" },
 ]
+test-base = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -523,11 +527,16 @@ dev = [
     { name = "requests" },
     { name = "ruff" },
 ]
+doc = []
 quality = [{ name = "ruff" }]
 test = [
     { name = "pytest" },
     { name = "pytest-cov" },
     { name = "requests" },
+]
+test-base = [
+    { name = "pytest" },
+    { name = "pytest-cov" },
 ]
 
 [[package]]

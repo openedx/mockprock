@@ -19,6 +19,9 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
 ]
 keywords = [
     "Python",
@@ -58,14 +61,18 @@ git_describe_command = ["git", "describe", "--dirty", "--tags", "--long", "--mat
 fallback_version = "0.0.0"
 
 [dependency-groups]
-test = [
+test-base = [
     "pytest",
     "pytest-cov",
+]
+test = [
+    {include-group = "test-base"},
     "requests",
 ]
 quality = [
     "ruff",
 ]
+doc = []
 ci = [
     "tox",
     "tox-uv",
@@ -73,6 +80,7 @@ ci = [
 dev = [
     {include-group = "test"},
     {include-group = "quality"},
+    {include-group = "doc"},
     "edx-lint",
 ]
 
@@ -90,7 +98,7 @@ package = true
 # https://docs.astral.sh/ruff/configuration/
 [tool.ruff]
 line-length = 120
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
 select = [
@@ -101,10 +109,14 @@ select = [
     "B",      # flake8-bugbear
     "C4",     # flake8-comprehensions
     "UP",     # pyupgrade
+    "DJ",     # flake8-django
 ]
 ignore = [
     "E501",   # line too long (handled by formatter)
 ]
+
+[tool.ruff.lint.isort]
+known-third-party = ["django"]
 
 [tool.ruff.format]
 quote-style = "double"
