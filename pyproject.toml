@@ -1,13 +1,13 @@
 [build-system]
-requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "mockprock"
-dynamic = ["version"]
+version = "2.0.0"
 description = "Mock proctoring backend for Open edX"
 readme = "README.rst"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 license = "Apache-2.0"
 authors = [
     {name = "Open edX Project", email = "oscm@openedx.org"},
@@ -17,7 +17,6 @@ classifiers = [
     "Intended Audience :: Developers",
     "Natural Language :: English",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Framework :: Django",
     "Framework :: Django :: 4.2",
@@ -50,16 +49,6 @@ Repository = "https://github.com/openedx/mockprock"
 [tool.setuptools.packages.find]
 exclude = ["tests*", "*.tests", "*.tests.*"]
 
-[tool.setuptools_scm]
-version_scheme = "only-version"
-local_scheme = "no-local-version"
-# mockprock only has npm-style git tags (npmv*), not Python version tags.
-# Use git describe with a match pattern to avoid matching npm tags; when no
-# Python version tag is found, git describe exits non-zero and setuptools-scm
-# falls back to fallback_version instead of raising on the unparseable tag.
-git_describe_command = ["git", "describe", "--dirty", "--tags", "--long", "--match", "v[0-9]*", "--match", "[0-9]*"]
-fallback_version = "0.0.0"
-
 [dependency-groups]
 test-base = [
     "pytest",
@@ -91,8 +80,18 @@ package = true
 
 # edx-lint uv constraint support
 # https://github.com/openedx/edx-lint
+#  DO NOT EDIT constraint-dependencies DIRECTLY.
+#  This list is managed by `edx_lint write_uv_constraints`
+#  and will be overwritten the next time `make upgrade` is run.
+#  - GLOBAL constraints: edit edx_lint/files/common_constraints.txt
+#  - REPO-SPECIFIC constraints: edit [tool.edx_lint].uv_constraints in this file
+constraint-dependencies = [
+    "Django<6.0",
+    "elasticsearch<7.14.0",
+]
 [tool.edx_lint]
 # This section is read by edx-lint; do not edit the constraint-dependencies directly.
+uv_constraints = []
 
 # Ruff configuration
 # https://docs.astral.sh/ruff/configuration/
@@ -151,9 +150,3 @@ show_missing = true
 [tool.coverage.html]
 directory = "htmlcov"
 
-# Semantic Release configuration
-# https://python-semantic-release.readthedocs.io/
-[tool.semantic_release]
-# Use SETUPTOOLS_SCM_PRETEND_VERSION to set version at build time since the
-# build step happens before the repo gets tagged.
-build_command = "pip install build && SETUPTOOLS_SCM_PRETEND_VERSION=$NEW_VERSION python -m build"
