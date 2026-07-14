@@ -14,15 +14,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.11", "3.12"]
-        toxenv: [lint, py311-test, py312-test]
-        exclude:
-          - python-version: "3.12"
-            toxenv: lint
-          - python-version: "3.12"
-            toxenv: py311-test
-          - python-version: "3.11"
-            toxenv: py312-test
+        python-version: ["3.12"]
+        toxenv: [lint, py312-test]
 
     steps:
       - name: Checkout repository
