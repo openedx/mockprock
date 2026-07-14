@@ -49,6 +49,9 @@ Repository = "https://github.com/openedx/mockprock"
 [tool.setuptools.packages.find]
 exclude = ["tests*", "*.tests", "*.tests.*"]
 
+[tool.setuptools.package-data]
+"mockprock" = ["templates/*"]
+
 [dependency-groups]
 test-base = [
     "pytest",
