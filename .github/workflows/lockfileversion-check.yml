@@ -1,4 +1,4 @@
-# Check that uv.lock is up to date
+# Check that both lockfiles are up to date
 
 name: Lockfile Version check
 
@@ -9,7 +9,10 @@ on:
   pull_request:
 
 jobs:
-  lockfile-check:
+  npm-lockfile-check:
+    uses: openedx/.github/.github/workflows/lockfileversion-check-v3.yml@master
+
+  uv-lockfile-check:
     name: Check uv.lock is up to date
     runs-on: ubuntu-latest
     steps:
