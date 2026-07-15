@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.12"]
-        toxenv: [lint, py312-test]
+        toxenv: [lint, py312]
 
     steps:
       - name: Checkout repository
@@ -33,10 +33,3 @@ jobs:
       - name: Run tox
         run: uv run tox -e ${{ matrix.toxenv }}
 
-      - name: Upload coverage to Codecov
-        if: contains(matrix.toxenv, 'test')
-        uses: codecov/codecov-action@18283e04ce6e62d37312384ff67231eb8fd56d24 # v5.4.3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}
-          flags: unittests
-          fail_ci_if_error: false
