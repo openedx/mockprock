@@ -21,7 +21,7 @@ format:  ## Auto-fix formatting and import order issues
 	uv run ruff format .
 
 test:  ## Run tests
-	uv run tox -e py312-test
+	uv run tox -e py312
 
 clean:  ## Clean cache, test, and build directories
 	rm -rf build/ dist/ *.egg-info/ .pytest_cache/ .ruff_cache/ htmlcov/
