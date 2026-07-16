@@ -1,0 +1,131 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mockprock"
+version = "2.0.0"
+description = "Mock proctoring backend for Open edX"
+readme = "README.rst"
+requires-python = ">=3.12"
+license = "Apache-2.0"
+authors = [
+    {name = "Open edX Project", email = "oscm@openedx.org"},
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.12",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.2",
+]
+keywords = [
+    "Python",
+    "edx",
+    "openedx",
+    "proctoring",
+]
+dependencies = []
+
+[project.optional-dependencies]
+server = [
+    "Flask>=2.0",
+    "PyJWT",
+    "requests",
+]
+
+[project.entry-points."openedx.proctoring"]
+mockprock = "mockprock.backend:MockProckBackend"
+
+[project.scripts]
+get-dashboard = "mockprock.commands:get_url"
+
+[project.urls]
+Repository = "https://github.com/openedx/mockprock"
+
+[tool.setuptools.packages.find]
+exclude = ["tests*", "*.tests", "*.tests.*"]
+
+[tool.setuptools.package-data]
+"mockprock" = ["templates/*"]
+
+[dependency-groups]
+test-base = [
+    "pytest",
+    "pytest-cov",
+]
+test = [
+    {include-group = "test-base"},
+    "requests",
+]
+quality = [
+    "pylint",
+    "pylint-celery",
+    "pylint-django",
+    "isort",
+    "edx-lint",
+]
+doc = []
+ci = [
+    "tox",
+    "tox-uv",
+]
+dev = [
+    {include-group = "test"},
+    {include-group = "quality"},
+    {include-group = "doc"},
+    "edx-lint",
+]
+
+# uv configuration
+# https://docs.astral.sh/uv/reference/settings/
+[tool.uv]
+package = true
+
+# edx-lint uv constraint support
+# https://github.com/openedx/edx-lint
+#  DO NOT EDIT constraint-dependencies DIRECTLY.
+#  This list is managed by `edx_lint write_uv_constraints`
+#  and will be overwritten the next time `make upgrade` is run.
+#  - GLOBAL constraints: edit edx_lint/files/common_constraints.txt
+#  - REPO-SPECIFIC constraints: edit [tool.edx_lint].uv_constraints in this file
+constraint-dependencies = [
+    "Django<6.0",
+    "elasticsearch<7.14.0",
+]
+[tool.edx_lint]
+# This section is read by edx-lint; do not edit the constraint-dependencies directly.
+uv_constraints = []
+
+# Pytest configuration
+# https://docs.pytest.org/en/stable/reference/customize.html
+[tool.pytest.ini_options]
+addopts = "--cov mockprock --cov-report term-missing --cov-report xml"
+
+# Coverage configuration
+# https://coverage.readthedocs.io/en/latest/config.html
+[tool.coverage.run]
+branch = true
+source = ["mockprock"]
+omit = [
+    "*/tests/*",
+    "*/__pycache__/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+show_missing = true
+
+[tool.coverage.html]
+directory = "htmlcov"
+
