@@ -16,5 +16,5 @@ on:
 
 jobs:
   add_remove_labels:
-    uses: openedx/.github/.github/workflows/add-remove-label-on-comment.yml@652f31b698f3c3cfbaed612010b96cd925b814ec # master
+    uses: openedx/.github/.github/workflows/add-remove-label-on-comment.yml@master
 

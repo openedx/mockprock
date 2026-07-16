@@ -9,4 +9,4 @@ on:
 
 jobs:
   self_assign_by_comment:
-    uses: openedx/.github/.github/workflows/self-assign-issue.yml@652f31b698f3c3cfbaed612010b96cd925b814ec # master
+    uses: openedx/.github/.github/workflows/self-assign-issue.yml@master
