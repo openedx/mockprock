@@ -32,7 +32,7 @@ dependencies = []
 
 [project.optional-dependencies]
 server = [
-    "Flask>=2.0",
+    "Flask<2.0",
     "PyJWT",
     "requests",
 ]
@@ -69,7 +69,7 @@ quality = [
     "edx-lint",
     # Runtime deps needed for pylint to resolve imports
     "requests",
-    "Flask>=2.0",
+    "Flask<2.0",
     "PyJWT",
     "edx-proctoring",
 ]
