@@ -62,11 +62,16 @@ test = [
     "requests",
 ]
 quality = [
-    "pylint",
+    "pylint>=3.3,<4.0",
     "pylint-celery",
     "pylint-django",
     "isort",
     "edx-lint",
+    # Runtime deps needed for pylint to resolve imports
+    "requests",
+    "Flask>=2.0",
+    "PyJWT",
+    "edx-proctoring",
 ]
 doc = []
 ci = [

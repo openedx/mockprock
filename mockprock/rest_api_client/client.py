@@ -8,6 +8,7 @@ import requests.utils
 
 from mockprock.rest_api_client.auth import SuppliedJwtAuth
 
+
 def user_agent():
     """
     Return a User-Agent that identifies this client.

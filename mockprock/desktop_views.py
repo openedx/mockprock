@@ -2,8 +2,9 @@
 These endpoints emulate a desktop proctoring application
 They support starting a session, stopping a session, and pinging for availability
 """
-from flask import Blueprint, jsonify
 import time
+
+from flask import Blueprint, jsonify
 
 fake_application = Blueprint(__name__, 'mockprock')
 
