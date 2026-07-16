@@ -12,7 +12,7 @@ on:
 
 jobs:
   routeissue:
-    uses: openedx/.github/.github/workflows/add-depr-ticket-to-depr-board.yml@master
+    uses: openedx/.github/.github/workflows/add-depr-ticket-to-depr-board.yml@652f31b698f3c3cfbaed612010b96cd925b814ec # master
     secrets:
       GITHUB_APP_ID: ${{ secrets.GRAPHQL_AUTH_APP_ID }}
       GITHUB_APP_PRIVATE_KEY: ${{ secrets.GRAPHQL_AUTH_APP_PEM }}
