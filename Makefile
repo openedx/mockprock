@@ -1,4 +1,4 @@
-.PHONY: help clean upgrade requirements test-python test quality quality-python lint
+.PHONY: help clean upgrade requirements test-python test quality quality-python
 
 .DEFAULT_GOAL := help
 
@@ -27,8 +27,6 @@ quality-python: ## Run python linters
 	uv run tox -e lint
 
 quality: quality-python ## Run linters
-
-lint: quality ## Run linting checks (alias for quality)
 
 test-python: clean ## run tests using pytest and generate coverage report
 	uv run tox -e py312
