@@ -24,7 +24,7 @@ requirements: ## install development environment requirements
 	uv tool install tox --with tox-uv
 
 quality-python: ## Run python linters
-	uv run tox -e lint
+	uv run tox -e quality
 
 quality: quality-python ## Run linters
 
