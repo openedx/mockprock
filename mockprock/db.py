@@ -1,8 +1,8 @@
-from collections import namedtuple
-from contextlib import closing
 import json
 import sqlite3
 import uuid
+from collections import namedtuple
+from contextlib import closing
 
 
 def namedtuple_factory(cursor, row):

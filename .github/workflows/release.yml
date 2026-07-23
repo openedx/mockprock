@@ -4,14 +4,20 @@ on:
     tags:
       - '*'
 
-permissions:
-  id-token: write  # Required for OIDC
-  contents: write  # For Semantic Release tagging
-
 jobs:
+  run_tests:
+    uses: ./.github/workflows/ci.yml
+    secrets: inherit
+    permissions:
+      contents: read
+
   release:
     name: Release
+    needs: run_tests
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: write  # For Semantic Release tagging
     steps:
       - name: Checkout
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1

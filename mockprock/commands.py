@@ -1,5 +1,6 @@
 """Command line utilities"""
 import argparse
+
 from mockprock.backend import MockProckBackend
 
 

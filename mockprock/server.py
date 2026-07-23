@@ -5,17 +5,16 @@ import atexit
 import sys
 import threading
 import time
-from collections import Iterable
+from collections.abc import Iterable
 from functools import wraps
 from pprint import pprint
 
 import jwt
 from flask import Flask, abort, jsonify, render_template, request
 
-from mockprock.rest_api_client.client import OAuthAPIClient
 from mockprock.db import init_app
 from mockprock.desktop_views import fake_application
-
+from mockprock.rest_api_client.client import OAuthAPIClient
 
 app = Flask(__name__)
 app.debug = True
