@@ -1,10 +1,9 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools-scm>8.1"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "mockprock"
-version = "2.0.0"
 description = "Mock proctoring backend for Open edX"
 readme = "README.rst"
 requires-python = ">=3.12"
@@ -28,6 +27,8 @@ keywords = [
     "openedx",
     "proctoring",
 ]
+dynamic = ["version"]
+
 dependencies = []
 
 [project.optional-dependencies]
@@ -127,4 +128,16 @@ show_missing = true
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[tool.semantic_release]
+# SETUPTOOLS_SCM_PRETEND_VERSION lets python-semantic-release drive the version
+# at build time without needing a setup.py file.
+build_command = "pip install build && SETUPTOOLS_SCM_PRETEND_VERSION=$NEW_VERSION python -m build"
+
+[tool.setuptools_scm]
+version_scheme = 'only-version'
+local_scheme = 'no-local-version'
+fallback_version = "2.0.0"
+# Only match Python-style version tags (e.g. v2.0.0), skipping npm-style tags (npmv*)
+git_describe_command = ["git", "describe", "--dirty", "--tags", "--long", "--match", "v*", "--match", "[0-9]*"]
 
