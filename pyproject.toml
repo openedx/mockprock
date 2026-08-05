@@ -129,6 +129,10 @@ show_missing = true
 [tool.coverage.html]
 directory = "htmlcov"
 
+[tool.semantic_release.changelog]
+mode = "update"
+insertion_flag = ".. changelog-insertion-marker"
+
 [tool.semantic_release]
 # SETUPTOOLS_SCM_PRETEND_VERSION lets python-semantic-release drive the version
 # at build time without needing a setup.py file.

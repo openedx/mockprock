@@ -30,15 +30,14 @@ jobs:
 
       - name: Run Semantic Release
         id: release
-        uses: python-semantic-release/python-semantic-release@8f4d8c4e3e4fcd2b8df16444b148aa49920cc4d3 # v10.6.1
+        uses: python-semantic-release/python-semantic-release@v10.6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           git_committer_name: "github-actions"
           git_committer_email: "actions@users.noreply.github.com"
-          changelog: "false"
 
       - name: Upload to GitHub Release Assets
-        uses: python-semantic-release/publish-action@98e6c872368aff4290ef8444db095e5bcd3fba6c # v10.6.1
+        uses: python-semantic-release/publish-action@v10.6.1
         if: steps.release.outputs.released == 'true'
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -73,4 +72,4 @@ jobs:
           path: dist
 
       - name: Publish to PyPI
-        uses: pypa/gh-action-pypi-publish@4bb033805d9e19112d8c697528791ff53f6c2f74 # v1.9.0
+        uses: pypa/gh-action-pypi-publish@dc37677b2e1c63e2034f94d8a5b11f265b73ba33 # v1.14.2
