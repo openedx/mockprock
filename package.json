@@ -13,9 +13,6 @@
   "files": [
     "/static"
   ],
-  "publishConfig": {
-    "access": "public"
-  },
   "keywords": [
     "proctoring",
     "OpenedX"
